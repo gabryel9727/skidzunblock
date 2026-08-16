@@ -7,6 +7,10 @@ Object.defineProperty(self, "crossOriginIsolated", { value: true }); // firefox 
 
 const sw = new UVServiceWorker();
 
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener("fetch", (event) => {
   if (event.request.url.startsWith(location.origin + __uv$config.prefix))
     return event.respondWith(sw.fetch(event));

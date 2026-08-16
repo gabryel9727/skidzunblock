@@ -65,7 +65,7 @@
           return;
         }
         try {
-          await navigator.serviceWorker.register("/uv/uv.sw-handler.js", { scope: "/uv/" });
+          await navigator.serviceWorker.register("/uv/uv.sw-handler.js", { scope: "/" });
           await navigator.serviceWorker.ready;
         } catch (e) {
           document.getElementById("msg").textContent = "Failed to start service worker: " + e.message;

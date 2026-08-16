@@ -18,6 +18,8 @@ const server = createServer();
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  // Allow the service worker to be registered with root ("/") scope.
+  res.setHeader("Service-Worker-Allowed", "/");
   next();
 });
 

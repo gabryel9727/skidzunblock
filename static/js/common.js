@@ -3,7 +3,7 @@
 function registerSW() {
   return navigator.serviceWorker
     .getRegistration("/uv/uv.sw-handler.js")
-    .then((w) => w || navigator.serviceWorker.register("/uv/uv.sw-handler.js", { scope: "/uv/" }));
+    .then((w) => w || navigator.serviceWorker.register("/uv/uv.sw-handler.js", { scope: "/" }));
 }
 
 function setTransport() {
