@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — skidzunblock</title>
+    <link rel="icon" href="/img/logo.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo" onclick="location.href='/'">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 3 L58 13 V31 C58 47 46 58 32 62 C18 58 6 47 6 31 V13 Z" fill="#141417" stroke="#e10600" stroke-width="4"/>
+          <path d="M22 40 L32 20 L42 40 M26 34 H38" stroke="#ff2b2b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <b>skidz<span>unblock</span></b>
+      </div>
+      <nav class="top">
+        <a href="/">Home</a>
+        <a href="/games.html">Games</a>
+        <a href="/apps.html">Apps</a>
+        <a href="/settings.html" class="active">Settings</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="section-title"><span class="bar"></span><h3>Settings</h3></div>
+
+      <div class="settings-box">
+        <div class="field">
+          <label for="search">Default search engine</label>
+          <select id="search"></select>
+          <div class="hint">Used when you type a query in the home search.</div>
+        </div>
+
+        <div class="field">
+          <label for="title">Tab cloak — title</label>
+          <input id="title" type="text" placeholder="e.g. Google Classroom" />
+          <div class="hint">Changes this browser tab's title (for privacy).</div>
+        </div>
+
+        <div class="field">
+          <label for="icon">Tab cloak — favicon URL</label>
+          <input id="icon" type="text" placeholder="https://…/favicon.ico" />
+          <div class="hint">Paste a direct image URL (PNG/ICO/SVG) to replace the tab icon.</div>
+        </div>
+
+        <div class="field">
+          <label>Quick cloaks</label>
+          <div class="chips" id="cloaks"></div>
+          <div class="hint">One-click presets for common "safe" looking tabs.</div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn" id="save">Save</button>
+          <button class="btn ghost" id="reset">Reset cloak</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>skidzunblock · open-source proxy.</footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+      import { searchProviders } from "/js/search.js";
+      const $ = (id) => document.getElementById(id);
+
+      const sel = $("search");
+      for (const k of Object.keys(searchProviders)) {
+        const o = document.createElement("option");
+        o.value = k; o.textContent = searchProviders[k].name; sel.appendChild(o);
+      }
+      sel.value = localStorage.getItem("skidz||search") || "google";
+      $("title").value = localStorage.getItem("skidz||title") || "";
+      $("icon").value = localStorage.getItem("skidz||icon") || "";
+
+      const presets = [
+        { name: "Google", title: "Google", icon: "https://www.google.com/favicon.ico" },
+        { name: "Classroom", title: "Classes – Google Classroom", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
+        { name: "Drive", title: "My Drive – Google Drive", icon: "https://ssl.gstatic.com/docs/doclist/images/favicon.ico" },
+        { name: "Docs", title: "Document", icon: "https://ssl.gstatic.com/docs/doclist/images/favicon_docs.ico" },
+      ];
+      for (const p of presets) {
+        const c = document.createElement("div");
+        c.className = "chip"; c.textContent = p.name;
+        c.onclick = () => { $("title").value = p.title; $("icon").value = p.icon; showToast("Cloak preset applied"); };
+        $("cloaks").appendChild(c);
+      }
+
+      $("save").onclick = () => {
+        localStorage.setItem("skidz||search", sel.value);
+        const t = $("title").value.trim();
+        const ic = $("icon").value.trim();
+        if (t) localStorage.setItem("skidz||title", t); else localStorage.removeItem("skidz||title");
+        if (ic) localStorage.setItem("skidz||icon", ic); else localStorage.removeItem("skidz||icon");
+        if (t) document.title = t;
+        if (ic) {
+          let l = document.querySelector("link[rel~=icon]");
+          if (!l) { l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); }
+          l.href = ic;
+        }
+        showToast("Settings saved");
+      };
+
+      $("reset").onclick = () => {
+        localStorage.removeItem("skidz||title");
+        localStorage.removeItem("skidz||icon");
+        $("title").value = ""; $("icon").value = "";
+        showToast("Cloak reset");
+      };
+
+      function showToast(m) {
+        const t = $("toast"); t.textContent = m; t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1800);
+      }
+    </script>
+  </body>
+</html>

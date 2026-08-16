@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>skidzunblock — your gateway</title>
+    <link rel="icon" href="/img/logo.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo" onclick="location.href='/'">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 3 L58 13 V31 C58 47 46 58 32 62 C18 58 6 47 6 31 V13 Z" fill="#141417" stroke="#e10600" stroke-width="4"/>
+          <path d="M22 40 L32 20 L42 40 M26 34 H38" stroke="#ff2b2b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <b>skidz<span>unblock</span></b>
+      </div>
+      <nav class="top">
+        <a href="/" class="active">Home</a>
+        <a href="/games.html">Games</a>
+        <a href="/apps.html">Apps</a>
+        <a href="/settings.html">Settings</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h2>Access the web <span>without limits.</span></h2>
+      <p>Paste a link or search the web. Everything runs through skidzunblock's secure proxy.</p>
+
+      <form class="search" id="searchForm">
+        <input id="searchInput" type="text" placeholder="Search Google or type a URL…" autocomplete="off" />
+        <button type="submit">Go</button>
+      </form>
+
+      <div class="chips" id="chips"></div>
+    </section>
+
+    <main>
+      <div class="section-title"><span class="bar"></span><h3>Quick launch</h3></div>
+      <div class="grid" id="quickGrid"></div>
+    </main>
+
+    <footer>
+      skidzunblock is an open-source educational proxy · built with
+      <a href="https://github.com/titaniumnetwork-dev/Ultraviolet" target="_blank" rel="noopener">Ultraviolet</a>.
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/bm/bare.cjs"></script>
+    <script src="/lcl/index.js"></script>
+    <script type="module">
+      import { go, search, initCommon } from "/js/common.js";
+      import { searchProviders } from "/js/search.js";
+      import { quickLinks } from "/js/sites.js";
+      window.searchProviders = searchProviders;
+      initCommon();
+
+      const form = document.getElementById("searchForm");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const v = document.getElementById("searchInput").value.trim();
+        if (!v) return;
+        search(v);
+      });
+
+      // chips = search engines
+      const chips = document.getElementById("chips");
+      for (const key of Object.keys(searchProviders)) {
+        const p = searchProviders[key];
+        const c = document.createElement("div");
+        c.className = "chip";
+        c.textContent = p.name;
+        c.onclick = () => {
+          localStorage.setItem("skidz||search", key);
+          showToast("Default search → " + p.name);
+        };
+        chips.appendChild(c);
+      }
+
+      // quick launch grid
+      const grid = document.getElementById("quickGrid");
+      for (const s of quickLinks) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<div class="ico">${s.icon}</div><div class="name">${s.name}</div><div class="sub">${s.sub}</div>`;
+        card.onclick = () => go(s.url);
+        grid.appendChild(card);
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1800);
+      }
+      window.showToast = showToast;
+    </script>
+  </body>
+</html>

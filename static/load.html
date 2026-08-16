@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>skidzunblock</title>
+    <style>
+      :root {
+        --bg: #0a0a0c;
+        --panel: #141417;
+        --red: #e10600;
+        --red2: #ff2b2b;
+        --txt: #f2f2f5;
+        --muted: #9a9aa5;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; }
+      body {
+        background: radial-gradient(1200px 600px at 50% -10%, #2a0606 0%, var(--bg) 55%) , var(--bg);
+        color: var(--txt);
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        min-height: 100vh; gap: 22px; padding: 24px;
+      }
+      .brand { display: flex; align-items: center; gap: 14px; }
+      .brand svg { width: 46px; height: 46px; filter: drop-shadow(0 0 12px rgba(225,6,0,.6)); }
+      .brand h1 { font-size: 26px; letter-spacing: 1px; font-weight: 800; }
+      .brand h1 b { color: var(--red2); }
+      .ring { width: 64px; height: 64px; border-radius: 50%; border: 5px solid var(--red); border-color: var(--red) transparent var(--red) transparent; animation: spin 1s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      p { color: var(--muted); font-size: 14px; text-align: center; max-width: 360px; }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 3 L58 13 V31 C58 47 46 58 32 62 C18 58 6 47 6 31 V13 Z" fill="#141417" stroke="#e10600" stroke-width="4"/>
+        <path d="M22 40 L32 20 L42 40 M26 34 H38" stroke="#ff2b2b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1>skidz<b>unblock</b></h1>
+    </div>
+    <div class="ring"></div>
+    <p id="msg">Connecting to the network. Hang tight…</p>
+
+    <script src="/bm/bare.cjs"></script>
+    <script src="/lcl/index.js"></script>
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
+    <script type="module">
+      import { searchProviders } from "/js/search.js";
+
+      function searchUtil(input, search) {
+        try { return new URL(input).toString(); } catch {}
+        try {
+          const u = new URL(`http://${input}`);
+          if (u.hostname.includes(".")) return u.toString();
+        } catch {}
+        return search.replace("%s", encodeURIComponent(input));
+      }
+
+      async function boot() {
+        if (!("serviceWorker" in navigator)) {
+          document.getElementById("msg").textContent =
+            "Your browser does not support service workers (needed for the proxy). Try a modern browser over https://.";
+          return;
+        }
+        try {
+          await navigator.serviceWorker.register("/uv/uv.sw-handler.js", { scope: "/uv/" });
+          await navigator.serviceWorker.ready;
+        } catch (e) {
+          document.getElementById("msg").textContent = "Failed to start service worker: " + e.message;
+          return;
+        }
+        BareMux.SetTransport("CurlMod.LibcurlClient", {
+          wisp: `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/wisp/`,
+        });
+
+        let raw = decodeURIComponent(location.hash.slice(1));
+        let data;
+        try { data = atob(raw); } catch { data = raw; }
+        const provider = searchProviders[localStorage.getItem("skidz||search") || "google"];
+        let url = data ? searchUtil(data, provider.frontend) : new URL(provider.frontend).origin;
+        location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
+      }
+      boot();
+    </script>
+  </body>
+</html>

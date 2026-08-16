@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — skidzunblock</title>
+    <link rel="icon" href="/img/logo.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo" onclick="location.href='/'">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 3 L58 13 V31 C58 47 46 58 32 62 C18 58 6 47 6 31 V13 Z" fill="#141417" stroke="#e10600" stroke-width="4"/>
+          <path d="M22 40 L32 20 L42 40 M26 34 H38" stroke="#ff2b2b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <b>skidz<span>unblock</span></b>
+      </div>
+      <nav class="top">
+        <a href="/">Home</a>
+        <a href="/games.html">Games</a>
+        <a href="/apps.html">Apps</a>
+        <a href="/settings.html">Settings</a>
+        <a href="/about.html" class="active">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="section-title"><span class="bar"></span><h3>About skidzunblock</h3></div>
+      <div class="settings-box">
+        <p style="color:var(--muted); line-height:1.7;">
+          <b style="color:var(--txt)">skidzunblock</b> is a free, open-source web unblocker built on top of
+          <a href="https://github.com/titaniumnetwork-dev/Ultraviolet" target="_blank" rel="noopener" style="color:var(--red2)">Ultraviolet</a>
+          — a powerful web proxy that routes traffic through a WISP transport. It lets you browse the web and play
+          games directly in your browser, bypassing content filters without installing anything.
+        </p>
+        <br />
+        <p style="color:var(--muted); line-height:1.7;">
+          <b style="color:var(--txt)">Features</b><br />
+          • Fast in-browser proxy (Ultraviolet + WISP + libcurl transport)<br />
+          • Built-in games & apps launcher<br />
+          • Tab cloak (custom title & favicon) for privacy<br />
+          • Multiple search engines<br />
+          • Self-hostable — deploy to Railway in one click
+        </p>
+        <br />
+        <p style="color:var(--muted); line-height:1.7;">
+          <b style="color:var(--txt)">Deploy</b><br />
+          Fork the repo, push to GitHub, then create a new project at
+          <a href="https://railway.com/new/github" target="_blank" rel="noopener" style="color:var(--red2)">railway.com/new/github</a>.
+          The included <code>Procfile</code> runs <code>node server.js</code> and respects <code>PORT</code>.
+        </p>
+        <br />
+        <p style="color:var(--muted); line-height:1.7;">
+          <b style="color:var(--txt)">Disclaimer</b><br />
+          This software is provided for educational purposes. Respect your network's acceptable use policy.
+        </p>
+      </div>
+    </main>
+
+    <footer>skidzunblock · open-source proxy.</footer>
+  </body>
+</html>

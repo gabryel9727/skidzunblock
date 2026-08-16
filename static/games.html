@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Games — skidzunblock</title>
+    <link rel="icon" href="/img/logo.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo" onclick="location.href='/'">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 3 L58 13 V31 C58 47 46 58 32 62 C18 58 6 47 6 31 V13 Z" fill="#141417" stroke="#e10600" stroke-width="4"/>
+          <path d="M22 40 L32 20 L42 40 M26 34 H38" stroke="#ff2b2b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <b>skidz<span>unblock</span></b>
+      </div>
+      <nav class="top">
+        <a href="/">Home</a>
+        <a href="/games.html" class="active">Games</a>
+        <a href="/apps.html">Apps</a>
+        <a href="/settings.html">Settings</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="section-title"><span class="bar"></span><h3>Games</h3></div>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <footer>skidzunblock · open-source proxy. Play responsibly.</footer>
+
+    <script src="/bm/bare.cjs"></script>
+    <script src="/lcl/index.js"></script>
+    <script type="module">
+      import { go, initCommon } from "/js/common.js";
+      import { games } from "/js/sites.js";
+      initCommon();
+      const grid = document.getElementById("grid");
+      for (const s of games) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<div class="ico">${s.icon}</div><div class="name">${s.name}</div><div class="sub">${s.sub}</div>`;
+        card.onclick = () => go(s.url);
+        grid.appendChild(card);
+      }
+    </script>
+  </body>
+</html>
